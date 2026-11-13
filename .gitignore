@@ -1,6 +1,11 @@
 .env
+.env.*
+!.env.example
 
 .vscode/
 Thumbs.db
+Desktop.ini
 
 *.log
+*.bak
+*.csv
