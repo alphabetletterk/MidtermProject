@@ -1,110 +1,141 @@
 BEGIN;
 
 TRUNCATE harvest, planting, farm, crop, farmer RESTART IDENTITY;
-
 TRUNCATE audit_log RESTART IDENTITY;
 
-INSERT INTO farmer (first_name, last_name, contact_number, address, date_registered) VALUES
-  ('Juan', 'Dela Cruz', '0917-555-0101', 'Brgy. Subangdaku, Mandaue City', '2025-01-15'),
-  ('Maria', 'Reyes', '0917-555-0102', 'Brgy. Casuntingan, Mandaue City', '2025-02-03'),
-  ('Pedro', 'Santos', '0917-555-0103', 'Brgy. Poblacion, Consolacion', '2025-02-20'),
-  ('Ana', 'Garcia', '0917-555-0104', 'Brgy. Cansaga, Consolacion', '2025-03-11'),
-  ('Jose', 'Flores', '0917-555-0105', 'Brgy. Yati, Liloan', '2025-04-02'),
-  ('Rosa', 'Mendoza', '0917-555-0106', 'Brgy. Poblacion, Compostela', '2025-05-19'),
-  ('Carlos', 'Villanueva', '0917-555-0107', 'Brgy. Guinsay, Danao City', '2025-06-08'),
-  ('Elena', 'Navarro', '0917-555-0108', 'Brgy. Tabunok, Talisay City', '2025-07-25'),
-  ('Ramon', 'Aquino', '0917-555-0109', 'Brgy. Poblacion, Carcar City', '2025-09-14'),
-  ('Luz', 'Ramos', '0917-555-0110', 'Brgy. Mantalongon, Dalaguete', '2025-11-06'),
-  ('Miguel', 'Torres', '0917-555-0111', 'Brgy. Poblacion, Naga City', '2026-02-17'),
-  ('Teresa', 'Castillo', '0917-555-0112', 'Brgy. Bulacao, Cebu City', '2026-04-09');
+INSERT INTO farmer (farmer_id, first_name, last_name, contact_number, address, date_registered)
+OVERRIDING SYSTEM VALUE VALUES
+  (1, 'Juan', 'Dela Cruz', '09171234567', 'Cebu City', '2026-10-26'),
+  (2, 'Maria', 'Santos', '09181234567', 'Carcar City, Cebu', '2026-10-26'),
+  (3, 'Pedro', 'Reyes', '09191234567', 'Danao City, Cebu', '2026-10-26'),
+  (4, 'Ana', 'Garcia', '09201234567', 'Argao, Cebu', '2026-10-26'),
+  (5, 'Jose', 'Mendoza', '09211234567', 'Bogo City, Cebu', '2026-10-26'),
+  (6, 'Ramon', 'Flores', '09221234567', 'Toledo City, Cebu', '2026-10-26'),
+  (7, 'Elena', 'Cruz', '09231234567', 'Naga City, Cebu', '2026-10-26'),
+  (8, 'Antonio', 'Lim', '09241234567', 'Minglanilla, Cebu', '2026-10-26'),
+  (9, 'Rosa', 'Fernandez', '09251234567', 'Liloan, Cebu', '2026-10-26'),
+  (10, 'Mario', 'Villanueva', '09261234567', 'Compostela, Cebu', '2026-10-26'),
+  (11, 'Teresa', 'Navarro', '09271234567', 'Talisay City, Cebu', '2026-10-26'),
+  (12, 'Carlos', 'Ramos', '09281234567', 'Consolacion, Cebu', '2026-10-26'),
+  (13, 'Liza', 'Torres', '09291234567', 'Dalaguete, Cebu', '2026-10-26'),
+  (14, 'Roberto', 'Castillo', '09301234567', 'Barili, Cebu', '2026-10-26'),
+  (15, 'Susan', 'Aquino', '09311234567', 'Sibonga, Cebu', '2026-10-26');
 
-INSERT INTO farm (farmer_id, farm_name, location, area_hectares, soil_type_id, irrigation_type_id)
-SELECT fr.farmer_id, v.farm_name, v.location, v.area, st.soil_type_id, it.irrigation_type_id
+INSERT INTO farm (farm_id, farmer_id, farm_name, location, area_hectares, soil_type_id, irrigation_type_id)
+OVERRIDING SYSTEM VALUE
+SELECT v.id, v.id, v.farm_name, v.location, v.area, st.soil_type_id, it.irrigation_type_id
 FROM (VALUES
-  ('0917-555-0101', 'Dela Cruz Farm', 'Sitio Mabolo, Subangdaku, Mandaue City', 3.50, 'Loam', 'Irrigated'),
-  ('0917-555-0102', 'Reyes Agricultural Farm', 'Sitio Riverside, Casuntingan, Mandaue City', 2.50, 'Clay Loam', 'Rainfed'),
-  ('0917-555-0103', 'Santos Vegetable Farm', 'Sitio Upper, Poblacion, Consolacion', 1.80, 'Sandy Loam', 'Drip Irrigation'),
-  ('0917-555-0104', 'Garcia Peanut Field', 'Sitio Lower, Cansaga, Consolacion', 2.00, 'Sandy Loam', 'Rainfed'),
-  ('0917-555-0105', 'Flores Melon Farm', 'Sitio Coastal, Yati, Liloan', 1.50, 'Loam', 'Drip Irrigation'),
-  ('0917-555-0106', 'Mendoza Farm', 'Sitio Centro, Poblacion, Compostela', 1.20, 'Clay Loam', 'Irrigated'),
-  ('0917-555-0107', 'Villanueva Root Farm', 'Sitio Hillside, Guinsay, Danao City', 3.00, 'Loam', 'Rainfed'),
-  ('0917-555-0108', 'Navarro Rice Field', 'Sitio Paddy, Tabunok, Talisay City', 4.00, 'Clay', 'Irrigated'),
-  ('0917-555-0109', 'Aquino Farm', 'Sitio Maharlika, Poblacion, Carcar City', 2.20, 'Sandy Loam', 'Rainfed'),
-  ('0917-555-0110', 'Ramos Corn Farm', 'Sitio Highland, Mantalongon, Dalaguete', 2.80, 'Clay Loam', 'Rainfed'),
-  ('0917-555-0111', 'Torres Farm', 'Sitio Greenfield, Poblacion, Naga City', 1.60, 'Loam', 'Drip Irrigation'),
-  ('0917-555-0112', 'Castillo Agricultural Farm', 'Sitio Lowland, Bulacao, Cebu City', 5.00, 'Clay', 'Irrigated')
-) AS v(contact, farm_name, location, area, soil, irrigation)
-JOIN farmer fr          ON fr.contact_number = v.contact
+  (1, 'Dela Cruz Farm', 'Cebu City', 2.50, 'Loam', 'Rainfed'),
+  (2, 'Santos Rice Farm', 'Carcar City, Cebu', 4.20, 'Clay Loam', 'Irrigated'),
+  (3, 'Reyes Agricultural Farm', 'Danao City, Cebu', 3.80, 'Sandy Loam', 'Rainfed'),
+  (4, 'Garcia Vegetable Farm', 'Argao, Cebu', 1.75, 'Loam', 'Drip Irrigation'),
+  (5, 'Mendoza Farm', 'Bogo City, Cebu', 5.00, 'Clay', 'Irrigated'),
+  (6, 'Flores Corn Farm', 'Toledo City, Cebu', 3.40, 'Sandy Loam', 'Rainfed'),
+  (7, 'Cruz Family Farm', 'Naga City, Cebu', 2.80, 'Loam', 'Irrigated'),
+  (8, 'Lim Agricultural Farm', 'Minglanilla, Cebu', 2.25, 'Clay Loam', 'Drip Irrigation'),
+  (9, 'Fernandez Farm', 'Liloan, Cebu', 3.10, 'Sandy Loam', 'Rainfed'),
+  (10, 'Villanueva Green Farm', 'Compostela, Cebu', 4.50, 'Loam', 'Irrigated'),
+  (11, 'Navarro Rice Field', 'Talisay City, Cebu', 3.75, 'Clay', 'Irrigated'),
+  (12, 'Ramos Farm', 'Consolacion, Cebu', 2.60, 'Loam', 'Rainfed'),
+  (13, 'Torres Vegetable Farm', 'Dalaguete, Cebu', 1.80, 'Sandy Loam', 'Drip Irrigation'),
+  (14, 'Castillo Agricultural Farm', 'Barili, Cebu', 5.50, 'Clay Loam', 'Irrigated'),
+  (15, 'Aquino Farm', 'Sibonga, Cebu', 3.20, 'Loam', 'Rainfed')
+) AS v(id, farm_name, location, area, soil, irrigation)
 JOIN soil_type st       ON st.soil_type_name = v.soil
 JOIN irrigation_type it ON it.irrigation_type_name = v.irrigation;
 
-INSERT INTO crop (crop_name, variety, crop_category_id, growing_period_days, season_id)
-SELECT v.crop_name, v.variety, cc.crop_category_id, v.days, s.season_id
+INSERT INTO crop (crop_id, crop_name, variety, crop_category_id, growing_period_days, season_id)
+OVERRIDING SYSTEM VALUE
+SELECT v.id, v.crop_name, v.variety, cc.crop_category_id, v.days, s.season_id
 FROM (VALUES
-  ('Rice', 'NSIC Rc 222', 'Cereal', 115, 'Wet Season'),
-  ('Corn', 'Yellow Corn', 'Cereal', 100, 'Dry Season'),
-  ('Tomato', 'Diamante Max', 'Vegetable', 90, 'Dry Season'),
-  ('Eggplant', 'Morena', 'Vegetable', 100, 'Year Round'),
-  ('Banana', 'Lakatan', 'Fruit', 300, 'Year Round'),
-  ('Watermelon', 'Sweet 16', 'Fruit', 85, 'Dry Season'),
-  ('Mango', 'Carabao', 'Fruit', 150, 'Year Round'),
-  ('Peanut', 'BPI Pn 9', 'Legume', 110, 'Year Round'),
-  ('Mung Bean', 'NSIC Mb 22', 'Legume', 65, 'Dry Season'),
-  ('Sweet Potato', 'NSIC Sp 30', 'Root Crop', 120, 'Year Round'),
-  ('Cassava', 'Golden Yellow', 'Root Crop', 240, 'Year Round')
-) AS v(crop_name, variety, category, days, season)
+  (1, 'Rice', 'NSIC Rc 222', 'Cereal', 115, 'Wet Season'),
+  (2, 'Corn', 'Yellow Corn', 'Cereal', 100, 'Dry Season'),
+  (3, 'Tomato', 'Diamante Max', 'Vegetable', 90, 'Dry Season'),
+  (4, 'Eggplant', 'Morena', 'Vegetable', 100, 'Year Round'),
+  (5, 'Banana', 'Lakatan', 'Fruit', 300, 'Year Round'),
+  (6, 'Mango', 'Carabao', 'Fruit', 150, 'Year Round'),
+  (7, 'Peanut', 'BPI Pn 9', 'Legume', 110, 'Year Round'),
+  (8, 'Cassava', 'Golden Yellow', 'Root Crop', 240, 'Year Round'),
+  (9, 'Sweet Potato', 'NSIC Sp 30', 'Root Crop', 120, 'Year Round'),
+  (10, 'Watermelon', 'Sweet 16', 'Fruit', 85, 'Dry Season')
+) AS v(id, crop_name, variety, category, days, season)
 JOIN crop_category cc ON cc.crop_category_name = v.category
 JOIN season s         ON s.season_name = v.season;
 
-INSERT INTO planting (farm_id, crop_id, planting_date, area_planted, seed_quantity, expected_harvest_date, status_id)
-SELECT f.farm_id, c.crop_id, v.planted::date, v.area, v.seed, v.planted::date + c.growing_period_days, ps.status_id
+INSERT INTO planting (planting_id, farm_id, crop_id, planting_date, area_planted, seed_quantity, expected_harvest_date, status_id)
+OVERRIDING SYSTEM VALUE
+SELECT v.id, v.farm_id, v.crop_id, v.planted::date, v.area, v.seed, v.expected::date, ps.status_id
 FROM (VALUES
-  ('Dela Cruz Farm', 'Rice', '2026-01-10', 2.00, 80.00, 'Harvested'),
-  ('Reyes Agricultural Farm', 'Corn', '2026-02-05', 1.50, 30.00, 'Harvested'),
-  ('Santos Vegetable Farm', 'Tomato', '2026-02-20', 0.60, 2.00, 'Harvested'),
-  ('Garcia Peanut Field', 'Peanut', '2026-03-01', 1.20, 96.00, 'Harvested'),
-  ('Flores Melon Farm', 'Watermelon', '2026-03-15', 0.90, 5.00, 'Harvested'),
-  ('Mendoza Farm', 'Eggplant', '2026-03-28', 0.50, 1.00, 'Harvested'),
-  ('Villanueva Root Farm', 'Sweet Potato', '2026-04-10', 1.50, 120.00, 'Harvested'),
-  ('Navarro Rice Field', 'Rice', '2026-04-22', 3.00, 120.00, 'Harvested'),
-  ('Aquino Farm', 'Mung Bean', '2026-06-01', 1.00, 20.00, 'Harvested'),
-  ('Ramos Corn Farm', 'Corn', '2026-06-18', 2.00, 40.00, 'Harvested'),
-  ('Torres Farm', 'Tomato', '2026-07-12', 0.70, 2.00, 'Harvested'),
-  ('Dela Cruz Farm', 'Cassava', '2026-06-05', 1.00, 100.00, 'Growing'),
-  ('Castillo Agricultural Farm', 'Rice', '2026-09-10', 2.50, 100.00, 'Growing'),
-  ('Reyes Agricultural Farm', 'Banana', '2026-11-03', 0.80, 160.00, 'Planted'),
-  ('Santos Vegetable Farm', 'Corn', '2026-11-08', 1.00, 20.00, 'Planted')
-) AS v(farm_name, crop_name, planted, area, seed, status)
-JOIN farm f             ON f.farm_name = v.farm_name
-JOIN crop c             ON c.crop_name = v.crop_name
+  (1, 1, 1, '2026-01-10', 0.50, 10.00, '2026-05-05', 'Harvested'),
+  (2, 2, 2, '2026-01-13', 0.60, 15.00, '2026-04-23', 'Harvested'),
+  (3, 3, 3, '2026-01-16', 0.70, 20.00, '2026-04-16', 'Harvested'),
+  (4, 4, 4, '2026-01-19', 0.80, 25.00, '2026-04-29', 'Harvested'),
+  (5, 5, 5, '2026-01-12', 0.90, 30.00, '2026-11-08', 'Harvested'),
+  (6, 6, 6, '2026-01-25', 1.00, 35.00, '2026-06-24', 'Harvested'),
+  (7, 7, 7, '2026-01-28', 1.10, 40.00, '2026-05-18', 'Harvested'),
+  (8, 8, 8, '2026-01-31', 1.20, 45.00, '2026-09-28', 'Harvested'),
+  (9, 9, 9, '2026-02-03', 1.30, 10.00, '2026-06-03', 'Harvested'),
+  (10, 10, 10, '2026-02-06', 1.40, 15.00, '2026-05-02', 'Harvested'),
+  (11, 11, 1, '2026-02-09', 0.50, 20.00, '2026-06-04', 'Harvested'),
+  (12, 12, 2, '2026-02-12', 0.60, 25.00, '2026-05-23', 'Harvested'),
+  (13, 13, 3, '2026-02-15', 0.70, 30.00, '2026-05-16', 'Harvested'),
+  (14, 14, 4, '2026-02-18', 0.80, 35.00, '2026-05-29', 'Harvested'),
+  (15, 15, 5, '2026-01-14', 0.90, 40.00, '2026-11-10', 'Harvested'),
+  (16, 1, 6, '2026-02-24', 1.00, 45.00, '2026-07-24', 'Harvested'),
+  (17, 2, 7, '2026-02-27', 1.10, 10.00, '2026-06-17', 'Harvested'),
+  (18, 3, 8, '2026-03-02', 1.20, 15.00, '2026-10-28', 'Harvested'),
+  (19, 4, 9, '2026-03-05', 1.30, 20.00, '2026-07-03', 'Harvested'),
+  (20, 5, 10, '2026-03-08', 1.40, 25.00, '2026-06-01', 'Harvested'),
+  (21, 6, 1, '2026-03-11', 0.50, 30.00, '2026-07-04', 'Growing'),
+  (22, 7, 2, '2026-03-14', 0.60, 35.00, '2026-06-22', 'Growing'),
+  (23, 8, 3, '2026-03-17', 0.70, 40.00, '2026-06-15', 'Growing'),
+  (24, 9, 4, '2026-03-20', 0.80, 45.00, '2026-06-28', 'Growing'),
+  (25, 10, 5, '2026-03-23', 0.90, 10.00, '2027-01-17', 'Growing'),
+  (26, 11, 6, '2026-03-26', 1.00, 15.00, '2026-08-23', 'Growing'),
+  (27, 12, 7, '2026-03-29', 1.10, 20.00, '2026-07-17', 'Growing'),
+  (28, 13, 8, '2026-04-01', 1.20, 25.00, '2026-11-27', 'Growing')
+) AS v(id, farm_id, crop_id, planted, area, seed, expected, status)
 JOIN planting_status ps ON ps.status_name = v.status;
 
-INSERT INTO harvest (planting_id, harvest_date, quantity_kg, selling_price_per_kg, quality_grade_id, remark_id)
-SELECT p.planting_id, v.harvested::date, v.kg, v.price, qg.quality_grade_id, hr.remark_id
+INSERT INTO harvest (harvest_id, planting_id, harvest_date, quantity_kg, selling_price_per_kg, quality_grade_id, remark_id)
+OVERRIDING SYSTEM VALUE
+SELECT v.id, v.planting_id, v.harvested::date, v.kg, v.price, qg.quality_grade_id, hr.remark_id
 FROM (VALUES
-  ('Dela Cruz Farm', 'Rice', '2026-01-10', '2026-05-08', 8600.00, 22.00, 'Grade A', 'Good Harvest'),
-  ('Reyes Agricultural Farm', 'Corn', '2026-02-05', '2026-05-20', 3900.00, 20.50, 'Grade B', 'Low Yield'),
-  ('Santos Vegetable Farm', 'Tomato', '2026-02-20', '2026-05-25', 2400.00, 38.00, 'Grade A', 'Good Harvest'),
-  ('Garcia Peanut Field', 'Peanut', '2026-03-01', '2026-06-22', 2100.00, 80.00, 'Grade A', 'Good Harvest'),
-  ('Flores Melon Farm', 'Watermelon', '2026-03-15', '2026-06-12', 9200.00, 24.00, 'Grade B', 'Acceptable Quality'),
-  ('Mendoza Farm', 'Eggplant', '2026-03-28', '2026-07-10', 1850.00, 45.00, 'Grade B', 'Acceptable Quality'),
-  ('Villanueva Root Farm', 'Sweet Potato', '2026-04-10', '2026-08-12', 12500.00, 29.00, 'Grade A', 'Good Harvest'),
-  ('Navarro Rice Field', 'Rice', '2026-04-22', '2026-08-19', 14200.00, 21.00, 'Grade C', 'Poor Quality'),
-  ('Aquino Farm', 'Mung Bean', '2026-06-01', '2026-08-07', 1100.00, 95.00, 'Grade B', 'Low Yield'),
-  ('Ramos Corn Farm', 'Corn', '2026-06-18', '2026-09-29', 6300.00, 19.00, 'Grade C', 'Damaged Harvest'),
-  ('Torres Farm', 'Tomato', '2026-07-12', '2026-10-14', 2000.00, 36.00, 'Grade A', 'Good Harvest')
-) AS v(farm_name, crop_name, planted, harvested, kg, price, grade, remark)
-JOIN farm f            ON f.farm_name = v.farm_name
-JOIN crop c            ON c.crop_name = v.crop_name
-JOIN planting p        ON p.farm_id = f.farm_id AND p.crop_id = c.crop_id AND p.planting_date = v.planted::date
+  (1, 1, '2026-05-07', 900.00, 22.00, 'Grade A', 'Good Harvest'),
+  (2, 2, '2026-04-25', 1025.00, 25.50, 'Grade B', 'Good Harvest'),
+  (3, 3, '2026-04-18', 1150.00, 29.00, 'Grade C', 'Acceptable Quality'),
+  (4, 4, '2026-05-01', 1275.00, 32.50, 'Grade A', 'Good Harvest'),
+  (5, 5, '2026-11-10', 1400.00, 36.00, 'Grade B', 'Good Harvest'),
+  (6, 6, '2026-06-26', 1525.00, 39.50, 'Grade C', 'Acceptable Quality'),
+  (7, 7, '2026-05-20', 1650.00, 43.00, 'Grade A', 'Good Harvest'),
+  (8, 8, '2026-09-30', 1775.00, 46.50, 'Grade B', 'Good Harvest'),
+  (9, 9, '2026-06-05', 1900.00, 22.00, 'Grade C', 'Acceptable Quality'),
+  (10, 10, '2026-05-04', 2025.00, 25.50, 'Grade A', 'Good Harvest'),
+  (11, 11, '2026-06-06', 2150.00, 29.00, 'Grade B', 'Good Harvest'),
+  (12, 12, '2026-05-25', 2275.00, 32.50, 'Grade C', 'Acceptable Quality'),
+  (13, 13, '2026-05-18', 2400.00, 36.00, 'Grade A', 'Good Harvest'),
+  (14, 14, '2026-05-31', 2525.00, 39.50, 'Grade B', 'Good Harvest'),
+  (15, 15, '2026-11-12', 2650.00, 43.00, 'Grade C', 'Acceptable Quality'),
+  (16, 16, '2026-07-26', 2775.00, 46.50, 'Grade A', 'Good Harvest'),
+  (17, 17, '2026-06-19', 2900.00, 22.00, 'Grade B', 'Good Harvest'),
+  (18, 18, '2026-10-30', 3025.00, 25.50, 'Grade C', 'Acceptable Quality'),
+  (19, 19, '2026-07-05', 3150.00, 29.00, 'Grade A', 'Good Harvest'),
+  (20, 20, '2026-06-03', 3275.00, 32.50, 'Grade B', 'Good Harvest')
+) AS v(id, planting_id, harvested, kg, price, grade, remark)
 JOIN quality_grade qg  ON qg.quality_grade_name = v.grade
 JOIN harvest_remark hr ON hr.remark_description = v.remark;
 
+SELECT setval(pg_get_serial_sequence('farmer',   'farmer_id'),   (SELECT max(farmer_id)   FROM farmer)),
+       setval(pg_get_serial_sequence('farm',     'farm_id'),     (SELECT max(farm_id)     FROM farm)),
+       setval(pg_get_serial_sequence('crop',     'crop_id'),     (SELECT max(crop_id)     FROM crop)),
+       setval(pg_get_serial_sequence('planting', 'planting_id'), (SELECT max(planting_id) FROM planting)),
+       setval(pg_get_serial_sequence('harvest',  'harvest_id'),  (SELECT max(harvest_id)  FROM harvest));
+
 DO $$
 BEGIN
-  IF (SELECT count(*) FROM farmer)   <> 12  OR (SELECT count(*) FROM farm)    <> 12 OR
-     (SELECT count(*) FROM crop)     <> 11  OR (SELECT count(*) FROM planting) <> 15  OR
-     (SELECT count(*) FROM harvest)  <> 11 THEN
+  IF (SELECT count(*) FROM farmer)  <> 15 OR (SELECT count(*) FROM farm)     <> 15 OR
+     (SELECT count(*) FROM crop)    <> 10 OR (SELECT count(*) FROM planting) <> 28 OR
+     (SELECT count(*) FROM harvest) <> 20 THEN
     RAISE EXCEPTION 'Row counts do not match the expected values. Nothing was changed.';
   END IF;
 END $$;
