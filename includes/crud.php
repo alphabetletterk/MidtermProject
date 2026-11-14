@@ -129,6 +129,10 @@ function crud_validate(array $fields, array $d, array $cfg, PDO $pdo, int $id = 
                 $dt = DateTime::createFromFormat('Y-m-d', $v);
                 if (!$dt || $dt->format('Y-m-d') !== $v) {
                     $err[$n] = "$lb must be a valid date.";
+                } elseif (isset($f['maxv']) && $v > $f['maxv']) {
+                    $err[$n] = "$lb cannot be after " . date('M j, Y', strtotime($f['maxv'])) . '.';
+                } elseif (isset($f['min']) && $v < $f['min']) {
+                    $err[$n] = "$lb cannot be before " . date('M j, Y', strtotime($f['min'])) . '.';
                 }
                 break;
             case 'tel':
