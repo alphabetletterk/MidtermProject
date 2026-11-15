@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/bootstrap.php';
-session_start();
+start_secure_session();
 date_default_timezone_set('Asia/Manila');
 
 const SESSION_IDLE_SECONDS = 30 * 60;

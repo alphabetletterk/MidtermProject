@@ -1,8 +1,8 @@
 <?php
-session_start();
-
 require __DIR__ . '/config/database.php';
 require_once __DIR__ . '/includes/audit.php';
+
+start_secure_session();
 
 if (isset($_SESSION['user'])) {
     header('Location: dashboard.php');
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $st = $pdo->prepare(
                 'SELECT u.user_id, u.username, u.password_hash, r.role_name
                  FROM users u JOIN role r ON r.role_id = u.role_id
-                 WHERE u.username = ?'
+                 WHERE lower(u.username) = lower(?)'
             );
             $st->execute([$username]);
             $account = $st->fetch();
