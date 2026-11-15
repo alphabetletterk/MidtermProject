@@ -1,0 +1,20 @@
+# Secrets and local files
+.env
+.env.*
+.vscode
+Thumbs.db
+*.log
+*.bak
+*.csv
+
+# Git and project files the server does not need
+.git
+.gitignore
+Dockerfile
+.dockerignore
+README.md
+
+# Setup and debugging scripts: never deployed
+install.php
+create_user.php
+database/
