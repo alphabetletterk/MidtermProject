@@ -35,9 +35,9 @@ crud_run([
         ],
     ],
     'fields'    => [
-        ['name' => 'first_name',      'label' => 'First name',      'type' => 'text', 'required' => true, 'max' => 50],
-        ['name' => 'last_name',       'label' => 'Last name',       'type' => 'text', 'required' => true, 'max' => 50],
-        ['name' => 'contact_number',  'label' => 'Contact number',  'type' => 'tel',  'required' => true, 'max' => 20],
+        ['name' => 'first_name',      'label' => 'First name',      'type' => 'text', 'required' => true, 'max' => 50, 'pattern' => 'name'],
+        ['name' => 'last_name',       'label' => 'Last name',       'type' => 'text', 'required' => true, 'max' => 50, 'pattern' => 'name'],
+        ['name' => 'contact_number',  'label' => 'Contact number',  'type' => 'tel',  'required' => true, 'max' => 20, 'pattern' => 'address'],
         ['name' => 'address',         'label' => 'Address',         'type' => 'text', 'required' => true, 'max' => 150],
         ['name' => 'date_registered', 'label' => 'Date registered', 'type' => 'date', 'required' => true, 'default' => 'today', 'maxv' => date('Y-m-d')],
     ],

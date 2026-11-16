@@ -95,6 +95,16 @@ function crud_changes(array $fields, array $old, array $new): array
     return $out;
 }
 
+function crud_text_rules(): array
+{
+    return [
+        'name'    => ["/^[\\p{L}\\p{M}\\s.,'’-]+$/u", "%s can only contain letters, spaces and . , ' -"],
+        'title'   => ["/^[\\p{L}\\p{M}\\p{N}\\s.,'’&()\\/-]+$/u", "%s can only contain letters, numbers, spaces and . , ' - / ( ) &"],
+        'address' => ["/^[\\p{L}\\p{M}\\p{N}\\s.,#'’\\/-]+$/u", "%s can only contain letters, numbers, spaces and . , # ' / -"],
+        'text'    => ['/^[^<>]*$/u', '%s cannot contain the characters < or >'],
+    ];
+}
+
 function crud_validate(array $fields, array $d, array $cfg, PDO $pdo, int $id = 0): array
 {
     $err = [];
@@ -138,6 +148,13 @@ function crud_validate(array $fields, array $d, array $cfg, PDO $pdo, int $id = 
             case 'tel':
                 if (!preg_match('/^[0-9+\-\s()]{7,20}$/', $v)) {
                     $err[$n] = "$lb must be a valid phone number.";
+                }
+                break;
+            case 'text':
+                $rules = crud_text_rules();
+                $rule = $rules[$f['pattern'] ?? 'text'] ?? $rules['text'];
+                if (preg_match($rule[0], $v) !== 1) {
+                    $err[$n] = sprintf($rule[1], $lb);
                 }
                 break;
         }

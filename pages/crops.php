@@ -42,8 +42,8 @@ crud_run([
         ],
     ],
     'fields'    => [
-        ['name' => 'crop_name',           'label' => 'Crop name', 'type' => 'text', 'required' => true, 'max' => 80],
-        ['name' => 'variety',             'label' => 'Variety',   'type' => 'text', 'required' => true, 'max' => 80],
+        ['name' => 'crop_name',           'label' => 'Crop name', 'type' => 'text', 'required' => true, 'max' => 80, 'pattern' => 'name'],
+        ['name' => 'variety',             'label' => 'Variety',   'type' => 'text', 'required' => true, 'max' => 80, 'pattern' => 'title'],
         ['name' => 'crop_category_id',    'label' => 'Category',  'type' => 'select', 'required' => true,
          'options' => 'SELECT crop_category_id AS id, crop_category_name AS label FROM crop_category ORDER BY crop_category_id'],
         ['name' => 'growing_period_days', 'label' => 'Growing period (days)', 'type' => 'number', 'required' => true, 'min' => 1, 'maxv' => 1000, 'step' => '1'],

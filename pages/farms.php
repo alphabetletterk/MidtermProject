@@ -48,8 +48,8 @@ crud_run([
     'fields'    => [
         ['name' => 'farmer_id',          'label' => 'Farmer',          'type' => 'select', 'required' => true,
          'options' => "SELECT farmer_id AS id, last_name || ', ' || first_name AS label FROM farmer ORDER BY last_name, first_name"],
-        ['name' => 'farm_name',          'label' => 'Farm name',       'type' => 'text',   'required' => true, 'max' => 100],
-        ['name' => 'location',           'label' => 'Location',        'type' => 'text',   'required' => true, 'max' => 150],
+        ['name' => 'farm_name',          'label' => 'Farm name',       'type' => 'text',   'required' => true, 'max' => 100, 'pattern' => 'title'],
+        ['name' => 'location',           'label' => 'Location',        'type' => 'text',   'required' => true, 'max' => 150, 'pattern' => 'address'],
         ['name' => 'area_hectares',      'label' => 'Area (hectares)', 'type' => 'number', 'required' => true, 'min' => 0.01, 'maxv' => 999999.99, 'step' => '0.01'],
         ['name' => 'soil_type_id',       'label' => 'Soil type',       'type' => 'select', 'required' => true,
          'options' => 'SELECT soil_type_id AS id, soil_type_name AS label FROM soil_type ORDER BY soil_type_id'],
